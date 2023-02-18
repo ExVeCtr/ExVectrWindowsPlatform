@@ -76,6 +76,7 @@ public:
 
         static auto lastTime = std::chrono::steady_clock::now();//std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()).count();
         static int64_t timeCount = 0;
+        static VCTR::Core::Timestamped<int64_t> timeStamped;
 
         auto time = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - lastTime).count();
         if (time > 0) {
@@ -83,7 +84,9 @@ public:
             timeCount += time;
         }
 
-        return timeCount;
+    	timeStamped.data = timeStamped.timestamp = timeCount;
+
+        return timeStamped;
 
     }
 
