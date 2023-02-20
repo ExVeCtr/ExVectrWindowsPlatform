@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iostream>
 
+#include "ExVectrCore.hpp"
 #include "ExVectrCore/time_base.hpp"
 #include "ExVectrCore/clock_source.hpp"
 #include "ExVectrCore/topic_subscribers.hpp"
@@ -101,7 +102,7 @@ public:
         setPaused(true);
     }
 
-} platformWindows;
+};
 
 class PlatformClock : public VCTR::Core::Clock_Source
 {
@@ -132,4 +133,10 @@ const VCTR::Core::Clock_Source &VCTR::Core::getPlatformClock()
     static PlatformClock clockSource;
 
     return clockSource;
+}
+
+void VCTR::Core::initialise() {
+
+    static PlatformWindows platformWindows;
+
 }
