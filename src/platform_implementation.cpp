@@ -21,7 +21,7 @@ bool printDataWaiting = false;
 
 void printOutE(const char *const &item)
 {
-    printList.append('!');
+    /*printList.append('!');
     printList.append('!');
     printList.append('!');
     printList.append('E');
@@ -30,7 +30,7 @@ void printOutE(const char *const &item)
     printList.append('O');
     printList.append('R');
     printList.append(':');
-    printList.append(' ');
+    printList.append(' ');*/
 
     size_t len = strnlen(item, 10000);
     for (size_t i = 0; i < len; i++) {
@@ -41,7 +41,7 @@ void printOutE(const char *const &item)
 
 void printOutW(const char *const &item)
 {
-    printList.append('!');
+    /*printList.append('!');
     printList.append('W');
     printList.append('A');
     printList.append('R');
@@ -50,7 +50,27 @@ void printOutW(const char *const &item)
     printList.append('N');
     printList.append('G');
     printList.append(':');
-    printList.append(' ');
+    printList.append(' ');*/
+
+    size_t len = strnlen(item, 10000);
+    for (size_t i = 0; i < len; i++) {
+        printList.append(item[i]);
+    }
+    printDataWaiting = true;
+};
+
+void printOutD(const char *const &item)
+{
+    /*printList.append('!');
+    printList.append('W');
+    printList.append('A');
+    printList.append('R');
+    printList.append('N');
+    printList.append('I');
+    printList.append('N');
+    printList.append('G');
+    printList.append(':');
+    printList.append(' ');*/
 
     size_t len = strnlen(item, 10000);
     for (size_t i = 0; i < len; i++) {
@@ -77,6 +97,7 @@ public:
     VCTR::Core::StaticCallback_Subscriber<const char *> printSubE;
     VCTR::Core::StaticCallback_Subscriber<const char *> printSubW;
     VCTR::Core::StaticCallback_Subscriber<const char *> printSubM;
+    VCTR::Core::StaticCallback_Subscriber<const char *> printSubD;
 
     PlatformWindows() : VCTR::Core::Task_Periodic("Platform Windows Task", 1 * VCTR::Core::MILLISECONDS, 0)
     {
@@ -93,6 +114,8 @@ public:
         printSubE.subscribe(VCTR::Core::getErrorTopic());
         printSubE.setCallbackFunction(printOutE);
         //printSubE.setTaskToResume(*this);
+        printSubE.subscribe(VCTR::Core::getDebugTopic());
+        printSubE.setCallbackFunction(printOutD);
     }
 
     void taskCheck() override
