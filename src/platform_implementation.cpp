@@ -1,5 +1,6 @@
 #include <chrono>
 #include <iostream>
+#include <string.h>
 
 #include "ExVectrCore.hpp"
 #include "ExVectrCore/time_base.hpp"
@@ -15,6 +16,8 @@ namespace
     VCTR::Core::ListArray<char> printList;
 } // namespace 
 
+
+bool printDataWaiting = false;
 
 void printOutE(const char *const &item)
 {
@@ -33,6 +36,7 @@ void printOutE(const char *const &item)
     for (size_t i = 0; i < len; i++) {
         printList.append(item[i]);
     }
+    printDataWaiting = true;
 };
 
 void printOutW(const char *const &item)
@@ -52,6 +56,7 @@ void printOutW(const char *const &item)
     for (size_t i = 0; i < len; i++) {
         printList.append(item[i]);
     }
+    printDataWaiting = true;
 };
 
 void printOutM(const char *const &item)
@@ -60,6 +65,7 @@ void printOutM(const char *const &item)
     for (size_t i = 0; i < len; i++) {
         printList.append(item[i]);
     }
+    printDataWaiting = true;
 };
 
 /**
@@ -80,13 +86,22 @@ public:
 
         printSubM.subscribe(VCTR::Core::getMessageTopic());
         printSubM.setCallbackFunction(printOutM);
-        printSubM.setTaskToResume(*this);
+        //printSubM.setTaskToResume(*this);
         printSubW.subscribe(VCTR::Core::getWarningTopic());
         printSubW.setCallbackFunction(printOutW);
-        printSubW.setTaskToResume(*this);
+        //printSubW.setTaskToResume(*this);
         printSubE.subscribe(VCTR::Core::getErrorTopic());
         printSubE.setCallbackFunction(printOutE);
-        printSubE.setTaskToResume(*this);
+        //printSubE.setTaskToResume(*this);
+    }
+
+    void taskCheck() override
+    {
+        if (printDataWaiting)
+        {
+            printDataWaiting = false;
+            setPaused(false);
+        }
     }
 
     void taskInit() override
